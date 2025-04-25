@@ -1,0 +1,78 @@
+AIビジネスマッチングエージェント
+このアプリケーションは企業間のビジネスマッチングを支援するAIシステムです。CSVファイルから企業データを読み込み、対象企業との協業可能性を分析し、マッチングレポートを生成します。
+機能
+
+CSVファイルからの企業データ抽出
+クエリ拡張（Query Expansion）によるキーワード生成
+HyDE（Hypothetical Document Embeddings）を用いた協業シナリオ生成
+ベクトル埋め込みと類似度計算によるマッチングスコア算出
+過去の類似事例の検索と提示
+AI生成による協業戦略提案
+
+必要条件
+
+Python 3.9以上
+OpenAI API キー
+
+セットアップ
+
+リポジトリをクローン
+
+bashgit clone https://github.com/yourname/business-matching-agent.git
+cd business-matching-agent
+
+必要なパッケージをインストール
+
+bashpip install -r requirements.txt
+
+環境変数の設定
+プロジェクトのルートディレクトリに.envファイルを作成し、以下の内容を追加してください：
+
+OPENAI_API_KEY=your_api_key_here
+SECRET_KEY=your_secret_key_for_flask_session
+DEBUG=True
+HOST=0.0.0.0
+PORT=5000
+※ your_api_key_hereは実際のOpenAI APIキーに置き換えてください。
+起動方法
+以下のコマンドでアプリケーションを起動します：
+bashpython run.py
+ブラウザで http://localhost:5000 にアクセスすると、アプリケーションが表示されます。
+使用方法
+
+ホーム画面で企業データを含むCSVファイルをアップロードします。
+
+CSVファイルには company_name（企業名）, industry（業種）, business_description（事業内容）の列が必要です。
+サンプルCSVが Test Companies.csv として提供されています。
+
+
+マッチング先企業情報（企業名、業種、事業内容）を入力します。
+「マッチング分析開始」ボタンをクリックすると分析が開始され、進捗が表示されます。
+分析完了後、マッチング結果が表示されます：
+
+マッチングスコア
+両社の協業可能性の詳細分析
+類似した過去の協業事例
+具体的な協業戦略提案
+
+
+
+ファイル構成
+
+app.py - メインのFlaskアプリケーション
+csv_extractor.py - CSVファイルからデータを抽出するモジュール
+matching_algorithm.py - 企業マッチングアルゴリズムの実装
+run.py - アプリケーション起動スクリプト
+requirements.txt - 必要なPythonパッケージ
+static/ - CSS、JavaScriptファイル
+templates/ - HTMLテンプレート
+uploads/ - アップロードされたCSVファイルの保存先（自動生成）
+
+注意事項
+
+OpenAI APIの使用には課金が発生する場合があります。APIの使用状況と料金にご注意ください。
+.envファイルはGitにコミットしないでください。APIキーなどの機密情報が含まれています。
+本アプリケーションは開発・テスト環境での使用を想定しています。本番環境で使用する場合は、セキュリティ対策を強化してください。
+
+ライセンス
+[ライセンス情報を記載]

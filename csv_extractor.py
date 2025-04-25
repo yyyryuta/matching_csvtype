@@ -4,7 +4,7 @@ CSVファイルから企業データを抽出するモジュール
 
 import os
 import csv
-from typing import Dict, Any
+from typing import Dict, Any, Optional
 
 def process_csv_file(filepath: str) -> Dict[str, Any]:
     """CSVファイルから企業データを抽出する"""
@@ -64,10 +64,21 @@ def process_csv_file(filepath: str) -> Dict[str, Any]:
             "message": f"CSVファイルの処理中にエラーが発生しました: {str(e)}"
         }
 
+def extract_company_data_from_csv(filepath: str) -> Optional[Dict[str, str]]:
+    """CSVファイルから企業データを抽出する関数（アプリケーション用インターフェース）"""
+    result = process_csv_file(filepath)
+    
+    if result["status"] == "success":
+        return result["data"]
+    else:
+        # エラーの場合はログに記録し、None を返す
+        print(f"Error extracting data from CSV: {result['message']}")
+        return None
+
 # テスト用コード
 if __name__ == "__main__":
     # テスト用のCSVファイルパス
-    test_filepath = "/home/ubuntu/matching_demo_app/data/test_companies.csv"
+    test_filepath = "data/test_companies.csv"
     
     # CSVファイルを処理
     result = process_csv_file(test_filepath)
