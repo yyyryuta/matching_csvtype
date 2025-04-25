@@ -1,0 +1,221 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AIビジネスマッチングエージェント</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+    <link rel="stylesheet" href="/static/css/style.css">
+</head>
+<body>
+    <header>
+        <div class="header-content">
+            <h1>AIビジネスマッチングエージェント</h1>
+            <button id="reset-button" class="reset-button">リセット</button>
+        </div>
+    </header>
+
+    <main>
+        <!-- ステップ1: ファイルアップロードとマッチング先企業情報入力 -->
+        <div id="step-one-container" class="container">
+            <h2>企業データをアップロード</h2>
+            <p class="instruction">CSVファイルをドラッグ＆ドロップするか、ファイルを選択してください。</p>
+            <p class="instruction-small">必要なフィールド: company_name（企業名）, industry（業種）, business_description（事業内容）</p>
+            
+            <div id="error-message" class="error-message" style="display: none;"></div>
+            
+            <form id="upload-form" enctype="multipart/form-data">
+                <div id="upload-area" class="upload-area">
+                    <i class="fas fa-file-csv file-icon"></i>
+                    <p>CSVファイルをここにドラッグ＆ドロップ</p>
+                    <p>または</p>
+                    <button type="button" class="file-select-button">ファイルを選択</button>
+                    <input type="file" id="file-input" accept=".csv" style="display: none;">
+                </div>
+                
+                <div class="target-company-section">
+                    <h3>マッチング先企業情報</h3>
+                    <p class="instruction-small">マッチングを検証したい企業の情報を入力してください</p>
+                    
+                    <div class="form-group">
+                        <label for="target-company-name">企業名</label>
+                        <input type="text" id="target-company-name" name="target-company-name" placeholder="例: 株式会社〇〇">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="target-industry">業種</label>
+                        <input type="text" id="target-industry" name="target-industry" placeholder="例: 製造業">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="target-business-description">事業内容</label>
+                        <textarea id="target-business-description" name="target-business-description" rows="4" placeholder="例: 当社は〇〇の製造・販売を行っています..."></textarea>
+                    </div>
+                </div>
+                
+                <button type="submit" class="upload-button">マッチング分析開始</button>
+            </form>
+        </div>
+
+        <!-- ステップ2: AI推論プロセス -->
+        <div id="step-two-container" class="container" style="display: none;">
+            <h2>AI推論プロセス</h2>
+            <div class="company-comparison">
+                <div class="company-info">
+                    <h3>企業A</h3>
+                    <p>企業名: <span id="company-a-name-display">企業名</span></p>
+                    <p>業種: <span id="company-a-industry-display">業種</span></p>
+                </div>
+                <div class="company-vs">VS</div>
+                <div class="company-info">
+                    <h3>企業B</h3>
+                    <p>企業名: <span id="company-b-name-display">企業名</span></p>
+                    <p>業種: <span id="company-b-industry-display">業種</span></p>
+                </div>
+            </div>
+            
+            <div class="progress-container">
+                <div class="progress-bar">
+                    <div id="progress-fill" class="progress-fill"></div>
+                </div>
+                <p class="progress-text">分析中...</p>
+            </div>
+            
+            <div class="analysis-results">
+                <div id="search-query-container" class="analysis-item" style="display: none;">
+                    <div class="analysis-icon">
+                        <i class="fas fa-search"></i>
+                    </div>
+                    <div class="analysis-content">
+                        <h3>検索クエリ生成</h3>
+                        <p id="search-query">検索クエリを生成中...</p>
+                    </div>
+                </div>
+                
+                <div id="industry-analysis-container" class="analysis-item" style="display: none;">
+                    <div class="analysis-icon">
+                        <i class="fas fa-industry"></i>
+                    </div>
+                    <div class="analysis-content">
+                        <h3>業界分析</h3>
+                        <p id="industry-analysis">業界分析中...</p>
+                    </div>
+                </div>
+                
+                <div id="case-reference-container" class="analysis-item" style="display: none;">
+                    <div class="analysis-icon">
+                        <i class="fas fa-history"></i>
+                    </div>
+                    <div class="analysis-content">
+                        <h3>事例参照</h3>
+                        <p id="case-reference">事例参照中...</p>
+                    </div>
+                </div>
+                
+                <div id="data-analysis-container" class="analysis-item" style="display: none;">
+                    <div class="analysis-icon">
+                        <i class="fas fa-chart-bar"></i>
+                    </div>
+                    <div class="analysis-content">
+                        <h3>データ分析</h3>
+                        <p id="data-analysis">データ分析中...</p>
+                    </div>
+                </div>
+                
+                <div id="matching-patterns-container" class="analysis-item" style="display: none;">
+                    <div class="analysis-icon">
+                        <i class="fas fa-puzzle-piece"></i>
+                    </div>
+                    <div class="analysis-content">
+                        <h3>マッチングパターン検出</h3>
+                        <p id="matching-patterns">パターン検出中...</p>
+                    </div>
+                </div>
+                
+                <div id="candidate-selection-container" class="analysis-item" style="display: none;">
+                    <div class="analysis-icon">
+                        <i class="fas fa-check-circle"></i>
+                    </div>
+                    <div class="analysis-content">
+                        <h3>マッチング評価</h3>
+                        <p id="candidate-selection">マッチング評価中...</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 結果表示 -->
+        <div id="results-container" class="container" style="display: none;">
+            <h2>マッチング結果</h2>
+            
+            <div class="results-section">
+                <h3>企業間マッチング評価</h3>
+                <div class="matching-score-card">
+                    <div class="company-comparison">
+                        <div class="company-info-card">
+                            <h4 id="company-a-name">企業A</h4>
+                            <span id="company-a-category" class="company-category">業種A</span>
+                            <p id="company-a-description" class="company-description">企業A説明</p>
+                        </div>
+                        <div class="matching-score">
+                            <div class="score-circle">
+                                <span id="matching-score-value">85</span><span>%</span>
+                            </div>
+                            <p>マッチング度</p>
+                        </div>
+                        <div class="company-info-card">
+                            <h4 id="company-b-name">企業B</h4>
+                            <span id="company-b-category" class="company-category">業種B</span>
+                            <p id="company-b-description" class="company-description">企業B説明</p>
+                        </div>
+                    </div>
+                    <div class="matching-details">
+                        <h4>マッチング詳細</h4>
+                        <p id="matching-details-text">両社の強みと弱みを分析した結果、高い相乗効果が期待できます。特に、企業Aの〇〇と企業Bの△△を組み合わせることで、新たな価値創造が可能です。</p>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="results-section">
+                <h3>過去の成功事例</h3>
+                <div class="case-cards">
+                    <div class="case-card">
+                        <div class="case-header">
+                            <h4 id="case1-title">事例タイトル</h4>
+                            <span id="case1-date" class="case-date">日付</span>
+                        </div>
+                        <p id="case1-description" class="case-description">事例説明</p>
+                        <div id="case1-roi" class="case-roi">ROI: 150%</div>
+                    </div>
+                    
+                    <div class="case-card">
+                        <div class="case-header">
+                            <h4 id="case2-title">事例タイトル</h4>
+                            <span id="case2-date" class="case-date">日付</span>
+                        </div>
+                        <p id="case2-description" class="case-description">事例説明</p>
+                        <div id="case2-roi" class="case-roi">ROI: 130%</div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="results-section">
+                <h3>AIによる戦略提案</h3>
+                <div id="strategy-list" class="strategy-list">
+                    <!-- 戦略項目がJSで動的に追加されます -->
+                </div>
+            </div>
+            
+            <div class="action-buttons">
+                <button class="download-button">レポートをダウンロード</button>
+            </div>
+        </div>
+    </main>
+
+    <footer>
+        <p>&copy; 2025 AIビジネスマッチングエージェント</p>
+    </footer>
+
+    <script src="/static/js/main.js"></script>
+</body>
+</html>
